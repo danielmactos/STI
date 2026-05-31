@@ -1,0 +1,64 @@
+# Java / Maven
+target/
+*.class
+*.jar
+*.war
+*.ear
+
+# Arquivos locais sensíveis
+.env
+.env.*
+application-local.properties
+application-dev.properties
+application-prod.properties
+
+src/main/resources/application-local.properties
+src/main/resources/application-dev.properties
+src/main/resources/application-prod.properties
+
+!src/main/resources/application.properties
+
+# Banco de dados - backups e dumps locais
+*.dump
+*.backup
+*.sql.backup
+*.bak
+backup/
+backups/
+dump/
+dumps/
+
+# Logs
+*.log
+logs/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+out/
+
+# VS Code
+.vscode/
+
+# Eclipse / STS
+.project
+.classpath
+.settings/
+.springBeans
+.sts4-cache/
+
+# Sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos temporários
+*.tmp
+*.temp
+*.swp
+*.swo
+
+# Relatórios e documentos locais
+*.pdf
+*.docx

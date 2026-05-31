@@ -1,0 +1,1441 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STI - Suporte Técnico de Internet</title>
+
+    <style>
+        :root {
+            --page-background: #f4f7fb;
+            --card-background: #ffffff;
+            --primary-color: #155eef;
+            --primary-color-hover: #0f49bd;
+            --text-color: #172033;
+            --muted-text-color: #5d667a;
+            --border-color: #d9e1ec;
+            --success-background: #eaf7ef;
+            --success-border: #8fd19e;
+            --success-text: #1f6f3f;
+            --danger-background: #fdecec;
+            --danger-border: #f2a6a6;
+            --danger-text: #9f2424;
+            --status-open-background: #eaf2ff;
+            --status-open-text: #155eef;
+            --status-running-background: #fff5db;
+            --status-running-text: #9a6700;
+            --status-finished-background: #eaf7ef;
+            --status-finished-text: #1f6f3f;
+            --field-gap: 8px;
+            --border-radius: 8px;
+            --desktop-side-space: 512px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: Arial, Helvetica, sans-serif;
+            background: var(--page-background);
+            color: var(--text-color);
+        }
+
+        .page {
+            min-height: 100vh;
+            margin-left: var(--desktop-side-space);
+            margin-right: var(--desktop-side-space);
+            padding-top: 32px;
+            padding-bottom: 32px;
+        }
+
+        .header {
+            margin-bottom: 24px;
+        }
+
+        .header h1 {
+            margin: 0 0 8px;
+            font-size: 28px;
+            line-height: 1.2;
+        }
+
+        .header p {
+            margin: 0;
+            color: var(--muted-text-color);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .section {
+            display: none;
+        }
+
+        .section.active-section {
+            display: block;
+        }
+
+        .card {
+            background: var(--card-background);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 12px 32px rgba(23, 32, 51, 0.08);
+        }
+
+        .card + .card {
+            margin-top: 24px;
+        }
+
+        .card h2 {
+            margin-top: 0;
+            margin-bottom: 8px;
+            font-size: 22px;
+        }
+
+        .card-description {
+            margin: 0 0 16px;
+            color: var(--muted-text-color);
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .access-grid,
+        .choice-grid,
+        .dashboard-grid,
+        .navigation-actions {
+            display: grid;
+            gap: var(--field-gap);
+        }
+
+        .access-group {
+            display: grid;
+            gap: var(--field-gap);
+        }
+
+        .access-group-title {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--muted-text-color);
+        }
+
+        .choice-card {
+            width: 100%;
+            min-height: 96px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 6px;
+            text-align: left;
+            background: #ffffff;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .choice-card:hover {
+            background: #eef4ff;
+            color: var(--primary-color);
+        }
+
+        .choice-card strong {
+            font-size: 17px;
+        }
+
+        .choice-card span {
+            color: var(--muted-text-color);
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .dashboard-card {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            background: #ffffff;
+        }
+
+        .dashboard-number {
+            margin: 0 0 4px;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .dashboard-label {
+            margin: 0;
+            color: var(--muted-text-color);
+            font-size: 14px;
+        }
+
+        .navigation-actions {
+            margin-bottom: 16px;
+        }
+
+        .form-grid {
+            display: grid;
+            gap: var(--field-gap);
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+            gap: var(--field-gap);
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        input,
+        textarea,
+        select {
+            width: 100%;
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 12px;
+            font-size: 15px;
+            color: var(--text-color);
+            background: #ffffff;
+            outline: none;
+        }
+
+        input:focus,
+        textarea:focus,
+        select:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(21, 94, 239, 0.12);
+        }
+
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        button {
+            border: 0;
+            border-radius: var(--border-radius);
+            padding: 12px 16px;
+            background: var(--primary-color);
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: var(--primary-color-hover);
+        }
+
+        button:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .secondary-button {
+            background: #ffffff;
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .secondary-button:hover {
+            background: #eef4ff;
+        }
+
+        .message {
+            display: none;
+            border-radius: var(--border-radius);
+            padding: 12px;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .message.success {
+            display: block;
+            border: 1px solid var(--success-border);
+            background: var(--success-background);
+            color: var(--success-text);
+        }
+
+        .message.error {
+            display: block;
+            border: 1px solid var(--danger-border);
+            background: var(--danger-background);
+            color: var(--danger-text);
+        }
+
+        .result-list {
+            margin: 8px 0 0;
+            padding-left: 18px;
+        }
+
+        .requests-list {
+            display: grid;
+            gap: var(--field-gap);
+            margin-top: 16px;
+        }
+
+        .request-item {
+            border: 1px solid var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 12px;
+            background: #ffffff;
+        }
+
+        .request-summary {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: var(--field-gap);
+            cursor: pointer;
+            list-style: none;
+        }
+
+        .request-summary::-webkit-details-marker {
+            display: none;
+        }
+
+        .finished-request-details {
+            margin-top: 12px;
+        }
+
+        .request-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: var(--field-gap);
+            margin-bottom: 8px;
+        }
+
+        .request-protocol {
+            margin: 0;
+            font-size: 15px;
+            font-weight: 700;
+        }
+
+        .request-date {
+            margin: 4px 0 0;
+            color: var(--muted-text-color);
+            font-size: 12px;
+        }
+
+        .status {
+            flex-shrink: 0;
+            border-radius: 999px;
+            padding: 4px 8px;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .status-open {
+            background: var(--status-open-background);
+            color: var(--status-open-text);
+        }
+
+        .status-running {
+            background: var(--status-running-background);
+            color: var(--status-running-text);
+        }
+
+        .status-finished {
+            background: var(--status-finished-background);
+            color: var(--status-finished-text);
+        }
+
+        .request-info {
+            display: grid;
+            gap: var(--field-gap);
+            margin: 0;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        .request-info div {
+            display: grid;
+            gap: 2px;
+        }
+
+        .request-info dt {
+            font-weight: 700;
+        }
+
+        .request-info dd {
+            margin: 0;
+            color: var(--muted-text-color);
+        }
+
+        .status-actions {
+            display: grid;
+            gap: var(--field-gap);
+            margin-top: 12px;
+        }
+
+        .empty-state {
+            border: 1px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            padding: 16px;
+            color: var(--muted-text-color);
+            font-size: 14px;
+            line-height: 1.5;
+            text-align: center;
+        }
+
+        @media (max-width: 1199px) {
+            .page {
+                margin-left: 16px;
+                margin-right: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+<main class="page">
+    <header class="header">
+        <h1>STI - Suporte Técnico de Internet</h1>
+        <p>Sistema de registro, triagem e acompanhamento de chamados por falta de conexão.</p>
+    </header>
+
+    <section id="homeSection" class="section active-section">
+        <section class="card" aria-labelledby="home-title">
+            <h2 id="home-title">Acesso ao sistema</h2>
+            <p class="card-description">Selecione a área de acesso.</p>
+
+            <div class="access-grid">
+                <div class="access-group">
+                    <p class="access-group-title">Suporte ao</p>
+                    <button type="button" class="choice-card" data-target-section="clientSection">
+                        <strong>Cliente</strong>
+                        <span>Clique aqui para resolver o seu problema.</span>
+                    </button>
+                </div>
+
+                <div class="access-group">
+                    <p class="access-group-title">Acesse como</p>
+                    <button type="button" class="choice-card" data-target-section="professionalLoginSection">
+                        <strong>Profissional</strong>
+                        <span>Login para profissionais.</span>
+                    </button>
+                </div>
+            </div>
+        </section>
+    </section>
+
+    <section id="clientSection" class="section">
+        <section class="card" aria-labelledby="client-title">
+            <h2 id="client-title">Abertura de chamado</h2>
+            <p class="card-description">Área para o cliente registrar problemas de conexão com a internet.</p>
+
+            <form id="requestForm" class="form-grid">
+                <div class="field">
+                    <label for="customerName">Nome completo</label>
+                    <input type="text" id="customerName" name="customerName" required>
+                </div>
+
+                <div class="field">
+                    <label for="customerContact">Contato</label>
+                    <input type="text" id="customerContact" name="customerContact" required>
+                </div>
+
+                <div class="field">
+                    <label for="city">Cidade</label>
+                    <input type="text" id="city" name="city" required>
+                </div>
+
+                <div class="field">
+                    <label for="address">Endereço</label>
+                    <input type="text" id="address" name="address" required>
+                </div>
+
+                <div class="field">
+                    <label for="neighborhood">Bairro</label>
+                    <input type="text" id="neighborhood" name="neighborhood" required>
+                </div>
+
+                <div class="field">
+                    <label for="referencePoint">Ponto de referência</label>
+                    <input type="text" id="referencePoint" name="referencePoint">
+                </div>
+
+                <div class="field">
+                    <label for="description">Descrição do problema</label>
+                    <textarea id="description" name="description" required></textarea>
+                </div>
+
+                <button type="submit" id="submitButton">Abrir chamado</button>
+
+                <div id="resultMessage" class="message" aria-live="polite">
+                    <strong id="resultTitle"></strong>
+                    <ul class="result-list">
+                        <li>Protocolo: <span id="protocolValue"></span></li>
+                        <li>Status: <span id="statusValue"></span></li>
+                    </ul>
+                </div>
+            </form>
+        </section>
+
+        <div class="navigation-actions" style="margin-top: 16px;">
+            <button type="button" class="secondary-button" data-target-section="homeSection">Voltar</button>
+        </div>
+    </section>
+
+    <section id="professionalLoginSection" class="section">
+        <section class="card" aria-labelledby="professional-login-title">
+            <h2 id="professional-login-title">Login profissional</h2>
+            <p class="card-description">Digite o nome e o sobrenome do profissional cadastrado.</p>
+
+            <div class="form-grid">
+                <div class="field">
+                    <label for="professionalLoginName">Nome e sobrenome</label>
+                    <input type="text" id="professionalLoginName" placeholder="Digite seu nome e sobrenome" autocomplete="off">
+                </div>
+
+                <button type="button" id="professionalLoginButton">Acessar</button>
+
+                <div id="professionalLoginMessage" class="message" aria-live="polite">
+                    <strong id="professionalLoginMessageTitle"></strong>
+                </div>
+            </div>
+        </section>
+
+        <div class="navigation-actions" style="margin-top: 16px;">
+            <button type="button" class="secondary-button" data-target-section="homeSection">Voltar</button>
+        </div>
+    </section>
+
+    <section id="assistantSection" class="section">
+        <section class="card" aria-labelledby="assistant-title">
+            <h2 id="assistant-title">OLN Internet</h2>
+            <p class="card-description">Área da assistente para triagem e encaminhamento de chamados.</p>
+
+            <button type="button" id="assistantRefreshButton">Atualizar chamados</button>
+
+            <div id="assistantRequestsList" class="requests-list" aria-live="polite">
+                <div class="empty-state">Carregando chamados...</div>
+            </div>
+        </section>
+
+        <div class="navigation-actions" style="margin-top: 16px;">
+            <button type="button" class="secondary-button" data-target-section="professionalLoginSection">Voltar</button>
+        </div>
+    </section>
+
+    <section id="technicianSection" class="section">
+        <section class="card" aria-labelledby="technician-title">
+            <h2 id="technician-title">OLN Internet</h2>
+            <p class="card-description">Área do técnico para visualizar e concluir chamados encaminhados.</p>
+
+            <button type="button" id="technicianRefreshButton">Atualizar chamados técnicos</button>
+
+            <div id="technicianRequestsList" class="requests-list" aria-live="polite">
+                <div class="empty-state">Carregando chamados...</div>
+            </div>
+        </section>
+
+        <div class="navigation-actions" style="margin-top: 16px;">
+            <button type="button" class="secondary-button" data-target-section="professionalLoginSection">Voltar</button>
+        </div>
+    </section>
+
+    <section id="managementSection" class="section">
+        <section class="card" aria-labelledby="management-title">
+            <h2 id="management-title">OLN Internet</h2>
+            <p class="card-description">Dashboard simples de gestão dos chamados e profissionais.</p>
+
+            <div id="managementDashboard" class="dashboard-grid" style="margin-top: 16px;" aria-live="polite">
+                <div class="empty-state">Carregando indicadores...</div>
+            </div>
+        </section>
+
+        <div class="navigation-actions" style="margin-top: 16px;">
+            <button type="button" id="managementRefreshButton">Atualizar dashboard</button>
+            <button type="button" id="managementProfessionalsButton" class="secondary-button">Cadastrar e listar profissionais</button>
+            <button type="button" class="secondary-button" data-target-section="professionalLoginSection">Voltar</button>
+        </div>
+    </section>
+
+    <section id="professionalSection" class="section">
+        <section class="card" aria-labelledby="professional-title">
+            <h2 id="professional-title">Cadastro de profissionais</h2>
+            <p class="card-description">
+                Área para cadastrar os profissionais responsáveis pelo atendimento da OLN Internet.
+            </p>
+
+            <form id="professionalForm" class="form-grid">
+                <div class="field">
+                    <label for="companyName">Empresa</label>
+                    <input type="text" id="companyName" name="companyName" value="OLN Internet" required>
+                </div>
+
+                <div class="field">
+                    <label for="professionalName">Nome do profissional</label>
+                    <input type="text" id="professionalName" name="professionalName" required>
+                </div>
+
+                <div class="field">
+                    <label for="professionalRole">Função</label>
+                    <select id="professionalRole" name="professionalRole" required>
+                        <option value="Assistant">Assistente</option>
+                        <option value="Technician">Técnico</option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="professionalSpecialty">Especialidade</label>
+                    <input type="text" id="professionalSpecialty" name="professionalSpecialty" placeholder="Exemplo: FTTH ou Secretário(a)">
+                </div>
+
+                <button type="submit" id="professionalSubmitButton">Cadastrar profissional</button>
+
+                <div id="professionalMessage" class="message" aria-live="polite">
+                    <strong id="professionalMessageTitle"></strong>
+                </div>
+            </form>
+        </section>
+
+        <section class="card" aria-labelledby="professional-list-title">
+            <h2 id="professional-list-title">Profissionais cadastrados</h2>
+            <p class="card-description">
+                Lista de técnicos e assistentes cadastrados para atuação no sistema.
+            </p>
+
+            <button type="button" id="professionalRefreshButton">Atualizar profissionais</button>
+
+            <div id="professionalsList" class="requests-list" aria-live="polite">
+                <div class="empty-state">Carregando profissionais...</div>
+            </div>
+        </section>
+
+        <div class="navigation-actions" style="margin-top: 16px;">
+            <button type="button" class="secondary-button" data-target-section="managementSection">Voltar</button>
+        </div>
+    </section>
+</main>
+
+<script>
+    const sections = document.querySelectorAll(".section");
+    const routeButtons = document.querySelectorAll("[data-target-section]");
+
+    const form = document.getElementById("requestForm");
+    const submitButton = document.getElementById("submitButton");
+    const resultMessage = document.getElementById("resultMessage");
+    const resultTitle = document.getElementById("resultTitle");
+    const protocolValue = document.getElementById("protocolValue");
+    const statusValue = document.getElementById("statusValue");
+
+    const assistantRefreshButton = document.getElementById("assistantRefreshButton");
+    const technicianRefreshButton = document.getElementById("technicianRefreshButton");
+    const assistantRequestsList = document.getElementById("assistantRequestsList");
+    const technicianRequestsList = document.getElementById("technicianRequestsList");
+
+    const professionalLoginName = document.getElementById("professionalLoginName");
+    const professionalLoginButton = document.getElementById("professionalLoginButton");
+    const professionalLoginMessage = document.getElementById("professionalLoginMessage");
+    const professionalLoginMessageTitle = document.getElementById("professionalLoginMessageTitle");
+
+    const managementRefreshButton = document.getElementById("managementRefreshButton");
+    const managementProfessionalsButton = document.getElementById("managementProfessionalsButton");
+    const managementDashboard = document.getElementById("managementDashboard");
+
+    const professionalForm = document.getElementById("professionalForm");
+    const professionalSubmitButton = document.getElementById("professionalSubmitButton");
+    const professionalMessage = document.getElementById("professionalMessage");
+    const professionalMessageTitle = document.getElementById("professionalMessageTitle");
+    const professionalRefreshButton = document.getElementById("professionalRefreshButton");
+    const professionalsList = document.getElementById("professionalsList");
+
+    let requestsCache = [];
+    let professionalsCache = [];
+
+    routeButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+            showSection(button.dataset.targetSection);
+        });
+    });
+
+    async function showSection(sectionId) {
+        sections.forEach(function (section) {
+            section.classList.remove("active-section");
+        });
+
+        const targetSection = document.getElementById(sectionId);
+
+        if (!targetSection) {
+            return;
+        }
+
+        targetSection.classList.add("active-section");
+
+        if (
+            sectionId === "assistantSection" ||
+            sectionId === "technicianSection" ||
+            sectionId === "managementSection"
+        ) {
+            await loadRequests();
+        }
+
+        if (
+            sectionId === "professionalLoginSection" ||
+            sectionId === "professionalSection" ||
+            sectionId === "managementSection"
+        ) {
+            await loadProfessionals();
+        }
+    }
+
+    function normalizeText(value) {
+        return String(value || "")
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .trim()
+            .replace(/\s+/g, " ")
+            .toLowerCase();
+    }
+
+    function translateStatus(status) {
+        const statuses = {
+            Open: "Aberto",
+            Running: "Em atendimento",
+            Finished: "Concluído"
+        };
+
+        return statuses[status] || status || "Não informado";
+    }
+
+    function translateRole(role) {
+        const roles = {
+            Assistant: "Assistente",
+            Technician: "Técnico"
+        };
+
+        return roles[role] || role || "Não informado";
+    }
+
+    function getStatusClass(status) {
+        const classes = {
+            Open: "status status-open",
+            Running: "status status-running",
+            Finished: "status status-finished"
+        };
+
+        return classes[status] || "status status-open";
+    }
+
+    function formatDate(dateValue) {
+        if (!dateValue) {
+            return "Data não informada";
+        }
+
+        const date = new Date(dateValue);
+
+        if (Number.isNaN(date.getTime())) {
+            return dateValue;
+        }
+
+        return date.toLocaleString("pt-BR");
+    }
+
+    function addTextElement(parent, tagName, className, text) {
+        const element = document.createElement(tagName);
+
+        if (className) {
+            element.className = className;
+        }
+
+        element.textContent = text;
+        parent.appendChild(element);
+
+        return element;
+    }
+
+    function addInfoItem(parent, title, value) {
+        const wrapper = document.createElement("div");
+
+        addTextElement(wrapper, "dt", "", title);
+        addTextElement(wrapper, "dd", "", value || "Não informado");
+
+        parent.appendChild(wrapper);
+    }
+
+    function getProfessionalsByRole(role) {
+        return professionalsCache.filter(function (professional) {
+            return professional.role === role;
+        });
+    }
+
+    function createProfessionalSelect(selectId, role, selectedId, placeholder) {
+        const select = document.createElement("select");
+        select.id = selectId;
+
+        const emptyOption = document.createElement("option");
+        emptyOption.value = "";
+        emptyOption.textContent = placeholder;
+        select.appendChild(emptyOption);
+
+        getProfessionalsByRole(role).forEach(function (professional) {
+            const option = document.createElement("option");
+            option.value = professional.id;
+            option.textContent = `${professional.name} — ${professional.specialty || "Sem especialidade"}`;
+
+            if (Number(professional.id) === Number(selectedId)) {
+                option.selected = true;
+            }
+
+            select.appendChild(option);
+        });
+
+        return select;
+    }
+
+    function getSelectedId(select) {
+        if (!select.value) {
+            return null;
+        }
+
+        return Number(select.value);
+    }
+
+    async function updateRequestStatus(id, payload) {
+        const response = await fetch(`/requests/${id}/status`, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(function () {
+                return null;
+            });
+
+            throw new Error(
+                errorData?.detail ||
+                errorData?.message ||
+                "Não foi possível atualizar o status do chamado."
+            );
+        }
+
+        return response.json();
+    }
+
+    function createRequestBaseCard(request) {
+        const article = document.createElement("article");
+        article.className = "request-item";
+
+        const top = document.createElement("div");
+        top.className = "request-top";
+
+        const topInfo = document.createElement("div");
+        addTextElement(topInfo, "p", "request-protocol", request.protocol);
+        addTextElement(topInfo, "p", "request-date", `Criado em ${formatDate(request.createdAt)}`);
+
+        const statusBadge = addTextElement(
+            top,
+            "span",
+            getStatusClass(request.status),
+            translateStatus(request.status)
+        );
+
+        top.insertBefore(topInfo, statusBadge);
+        article.appendChild(top);
+
+        const info = document.createElement("dl");
+        info.className = "request-info";
+
+        addInfoItem(info, "Cliente", `${request.customerName} — ${request.customerContact}`);
+        addInfoItem(info, "Localidade", `${request.city}, ${request.neighborhood}, ${request.address}`);
+        addInfoItem(info, "Ponto de referência", request.referencePoint);
+        addInfoItem(info, "Descrição", request.description);
+
+        if (request.assistantName) {
+            addInfoItem(info, "Assistente responsável", request.assistantName);
+        }
+
+        if (request.technicianName) {
+            addInfoItem(info, "Técnico responsável", request.technicianName);
+        }
+
+        if (request.triageNote) {
+            addInfoItem(info, "Observação de triagem", request.triageNote);
+        }
+
+        if (request.assignedAt) {
+            addInfoItem(info, "Encaminhado em", formatDate(request.assignedAt));
+        }
+
+        if (request.finishedAt) {
+            addInfoItem(info, "Concluído em", formatDate(request.finishedAt));
+        }
+
+        article.appendChild(info);
+
+        return article;
+    }
+
+    function createFinishedRequestCard(request) {
+        const details = document.createElement("details");
+        details.className = "request-item";
+
+        const summary = document.createElement("summary");
+        summary.className = "request-summary";
+
+        const summaryInfo = document.createElement("div");
+        addTextElement(summaryInfo, "p", "request-protocol", request.protocol);
+        addTextElement(summaryInfo, "p", "request-date", `Concluído em ${formatDate(request.finishedAt)}`);
+
+        const statusBadge = addTextElement(
+            summary,
+            "span",
+            getStatusClass(request.status),
+            translateStatus(request.status)
+        );
+
+        summary.insertBefore(summaryInfo, statusBadge);
+        details.appendChild(summary);
+
+        const info = document.createElement("dl");
+        info.className = "request-info finished-request-details";
+
+        addInfoItem(info, "Cliente", `${request.customerName} — ${request.customerContact}`);
+        addInfoItem(info, "Localidade", `${request.city}, ${request.neighborhood}, ${request.address}`);
+        addInfoItem(info, "Ponto de referência", request.referencePoint);
+        addInfoItem(info, "Descrição", request.description);
+
+        if (request.assistantName) {
+            addInfoItem(info, "Assistente responsável", request.assistantName);
+        }
+
+        if (request.technicianName) {
+            addInfoItem(info, "Técnico responsável", request.technicianName);
+        }
+
+        if (request.triageNote) {
+            addInfoItem(info, "Observação de triagem", request.triageNote);
+        }
+
+        if (request.assignedAt) {
+            addInfoItem(info, "Encaminhado em", formatDate(request.assignedAt));
+        }
+
+        if (request.finishedAt) {
+            addInfoItem(info, "Concluído em", formatDate(request.finishedAt));
+        }
+
+        details.appendChild(info);
+
+        return details;
+    }
+
+    function createAssistantCard(request) {
+        if (request.status === "Finished") {
+            return createFinishedRequestCard(request);
+        }
+
+        const article = createRequestBaseCard(request);
+
+        if (request.status !== "Open") {
+            return article;
+        }
+
+        const actions = document.createElement("div");
+        actions.className = "status-actions";
+        const statusLabel = document.createElement("label");
+        statusLabel.setAttribute("for", `assistant-status-${request.id}`);
+        statusLabel.textContent = "Decisão da assistente";
+
+        const statusSelect = document.createElement("select");
+        statusSelect.id = `assistant-status-${request.id}`;
+
+        const options = [
+            { value: "Open", text: "Manter aberto" },
+            { value: "Running", text: "Encaminhar ao técnico" },
+            { value: "Finished", text: "Concluir sem técnico" }
+        ];
+
+        options.forEach(function (optionData) {
+            const option = document.createElement("option");
+            option.value = optionData.value;
+            option.textContent = optionData.text;
+
+            if (optionData.value === request.status) {
+                option.selected = true;
+            }
+
+            statusSelect.appendChild(option);
+        });
+
+        const assistantLabel = document.createElement("label");
+        assistantLabel.setAttribute("for", `assistant-professional-${request.id}`);
+        assistantLabel.textContent = "Assistente responsável";
+
+        const assistantSelect = createProfessionalSelect(
+            `assistant-professional-${request.id}`,
+            "Assistant",
+            request.assistantId,
+            "Selecione a assistente"
+        );
+
+        const technicianLabel = document.createElement("label");
+        technicianLabel.setAttribute("for", `technician-professional-${request.id}`);
+        technicianLabel.textContent = "Técnico responsável";
+
+        const technicianSelect = createProfessionalSelect(
+            `technician-professional-${request.id}`,
+            "Technician",
+            request.technicianId,
+            "Selecione o técnico"
+        );
+
+        const triageLabel = document.createElement("label");
+        triageLabel.setAttribute("for", `triage-note-${request.id}`);
+        triageLabel.textContent = "Observação de triagem";
+
+        const triageTextarea = document.createElement("textarea");
+        triageTextarea.id = `triage-note-${request.id}`;
+        triageTextarea.value = request.triageNote || "";
+        triageTextarea.placeholder = "Registre a análise feita pela assistente.";
+
+        function updateTechnicianAvailability() {
+            technicianSelect.disabled = statusSelect.value !== "Running";
+        }
+
+        statusSelect.addEventListener("change", updateTechnicianAvailability);
+        updateTechnicianAvailability();
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = "Salvar e enviar";
+
+        button.addEventListener("click", async function () {
+            const selectedStatus = statusSelect.value;
+            const assistantId = getSelectedId(assistantSelect);
+            const technicianId = getSelectedId(technicianSelect);
+
+            if (!assistantId) {
+                alert("Selecione a assistente responsável.");
+                return;
+            }
+
+            if (selectedStatus === "Running" && !technicianId) {
+                alert("Selecione o técnico responsável pelo atendimento.");
+                return;
+            }
+
+            button.disabled = true;
+            button.textContent = "Salvando...";
+
+            const payload = {
+                status: selectedStatus,
+                assistantId: assistantId,
+                technicianId: selectedStatus === "Running" ? technicianId : null,
+                triageNote: triageTextarea.value.trim()
+            };
+
+            try {
+                await updateRequestStatus(request.id, payload);
+                await loadRequests();
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                button.disabled = false;
+                button.textContent = "Salvar e enviar";
+            }
+        });
+
+        actions.appendChild(statusLabel);
+        actions.appendChild(statusSelect);
+        actions.appendChild(assistantLabel);
+        actions.appendChild(assistantSelect);
+        actions.appendChild(technicianLabel);
+        actions.appendChild(technicianSelect);
+        actions.appendChild(triageLabel);
+        actions.appendChild(triageTextarea);
+        actions.appendChild(button);
+
+        article.appendChild(actions);
+
+        return article;
+    }
+
+    function createTechnicianCard(request) {
+        const article = createRequestBaseCard(request);
+
+        const actions = document.createElement("div");
+        actions.className = "status-actions";
+
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = "Concluir atendimento";
+
+        button.addEventListener("click", async function () {
+            button.disabled = true;
+            button.textContent = "Concluindo...";
+
+            const payload = {
+                status: "Finished",
+                assistantId: request.assistantId || null,
+                technicianId: request.technicianId || null,
+                triageNote: request.triageNote || null
+            };
+
+            try {
+                await updateRequestStatus(request.id, payload);
+                await loadRequests();
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                button.disabled = false;
+                button.textContent = "Concluir atendimento";
+            }
+        });
+
+        actions.appendChild(button);
+        article.appendChild(actions);
+
+        return article;
+    }
+
+    async function createProfessional(payload) {
+        const response = await fetch("/professionals", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+            throw new Error("Não foi possível cadastrar o profissional.");
+        }
+
+        return response.json();
+    }
+
+    function createProfessionalCard(professional) {
+        const article = document.createElement("article");
+        article.className = "request-item";
+
+        const top = document.createElement("div");
+        top.className = "request-top";
+
+        const topInfo = document.createElement("div");
+        addTextElement(topInfo, "p", "request-protocol", `${professional.id} - ${professional.name}`);
+        addTextElement(topInfo, "p", "request-date", professional.companyName);
+
+        const roleBadge = addTextElement(
+            top,
+            "span",
+            "status status-open",
+            translateRole(professional.role)
+        );
+
+        top.insertBefore(topInfo, roleBadge);
+        article.appendChild(top);
+
+        const info = document.createElement("dl");
+        info.className = "request-info";
+
+        addInfoItem(info, "Empresa", professional.companyName);
+        addInfoItem(info, "Função", translateRole(professional.role));
+        addInfoItem(info, "Especialidade", professional.specialty);
+        addInfoItem(info, "Cadastrado em", formatDate(professional.createdAt));
+
+        article.appendChild(info);
+
+        return article;
+    }
+
+    async function loadProfessionals() {
+        professionalsList.innerHTML = "";
+        addTextElement(professionalsList, "div", "empty-state", "Carregando profissionais...");
+
+        try {
+            const response = await fetch("/professionals");
+
+            if (!response.ok) {
+                throw new Error("Não foi possível carregar os profissionais.");
+            }
+
+            professionalsCache = await response.json();
+
+            renderProfessionals();
+            renderAssistantRequests();
+            renderTechnicianRequests();
+            renderManagementDashboard();
+        } catch (error) {
+            professionalsList.innerHTML = "";
+            addTextElement(professionalsList, "div", "empty-state", error.message);
+        }
+    }
+
+    function renderProfessionals() {
+        professionalsList.innerHTML = "";
+
+        if (professionalsCache.length === 0) {
+            addTextElement(professionalsList, "div", "empty-state", "Nenhum profissional cadastrado.");
+            return;
+        }
+
+        professionalsCache.forEach(function (professional) {
+            professionalsList.appendChild(createProfessionalCard(professional));
+        });
+    }
+
+    async function loadRequests() {
+        try {
+            const response = await fetch("/requests");
+
+            if (!response.ok) {
+                throw new Error("Não foi possível carregar os chamados.");
+            }
+
+            requestsCache = await response.json();
+
+            renderAssistantRequests();
+            renderTechnicianRequests();
+            renderManagementDashboard();
+        } catch (error) {
+            assistantRequestsList.innerHTML = "";
+            technicianRequestsList.innerHTML = "";
+            managementDashboard.innerHTML = "";
+
+            addTextElement(assistantRequestsList, "div", "empty-state", error.message);
+            addTextElement(technicianRequestsList, "div", "empty-state", error.message);
+            addTextElement(managementDashboard, "div", "empty-state", error.message);
+        }
+    }
+
+    function renderAssistantRequests() {
+        assistantRequestsList.innerHTML = "";
+
+        if (requestsCache.length === 0) {
+            addTextElement(assistantRequestsList, "div", "empty-state", "Nenhum chamado registrado.");
+            return;
+        }
+
+        requestsCache.forEach(function (request) {
+            assistantRequestsList.appendChild(createAssistantCard(request));
+        });
+    }
+
+    function renderTechnicianRequests() {
+        technicianRequestsList.innerHTML = "";
+
+        const technicalRequests = requestsCache.filter(function (request) {
+            return request.status === "Running";
+        });
+
+        if (technicalRequests.length === 0) {
+            addTextElement(
+                technicianRequestsList,
+                "div",
+                "empty-state",
+                "Nenhum chamado encaminhado para atendimento técnico."
+            );
+            return;
+        }
+
+        technicalRequests.forEach(function (request) {
+            technicianRequestsList.appendChild(createTechnicianCard(request));
+        });
+    }
+
+    function renderManagementDashboard() {
+        managementDashboard.innerHTML = "";
+
+        const totalRequests = requestsCache.length;
+        const openRequests = requestsCache.filter(function (request) {
+            return request.status === "Open";
+        }).length;
+        const runningRequests = requestsCache.filter(function (request) {
+            return request.status === "Running";
+        }).length;
+        const finishedRequests = requestsCache.filter(function (request) {
+            return request.status === "Finished";
+        }).length;
+        const totalProfessionals = professionalsCache.length;
+
+        addDashboardCard("Chamados totais", totalRequests);
+        addDashboardCard("Chamados abertos", openRequests);
+        addDashboardCard("Em atendimento", runningRequests);
+        addDashboardCard("Concluídos", finishedRequests);
+        addDashboardCard("Profissionais cadastrados", totalProfessionals);
+    }
+
+    function addDashboardCard(label, value) {
+        const card = document.createElement("article");
+        card.className = "dashboard-card";
+
+        addTextElement(card, "p", "dashboard-number", String(value));
+        addTextElement(card, "p", "dashboard-label", label);
+
+        managementDashboard.appendChild(card);
+    }
+
+    async function loginProfessional() {
+        professionalLoginMessage.className = "message";
+        professionalLoginMessageTitle.textContent = "";
+
+        const typedName = normalizeText(professionalLoginName.value);
+
+        if (!typedName) {
+            professionalLoginMessage.className = "message error";
+            professionalLoginMessageTitle.textContent = "Digite o nome e o sobrenome do profissional.";
+            return;
+        }
+
+        const professional = professionalsCache.find(function (item) {
+            return normalizeText(item.name) === typedName;
+        });
+
+        if (!professional) {
+            professionalLoginMessage.className = "message error";
+            professionalLoginMessageTitle.textContent = "Profissional não encontrado.";
+            return;
+        }
+
+        if (normalizeText(professional.name) === normalizeText("Wasley Matos")) {
+            await showSection("managementSection");
+            return;
+        }
+
+        if (professional.role === "Assistant") {
+            await showSection("assistantSection");
+            return;
+        }
+
+        if (professional.role === "Technician") {
+            await showSection("technicianSection");
+            return;
+        }
+
+        professionalLoginMessage.className = "message error";
+        professionalLoginMessageTitle.textContent = "Função profissional não autorizada.";
+    }
+
+    professionalLoginButton.addEventListener("click", loginProfessional);
+
+    professionalLoginName.addEventListener("keydown", function (event) {
+        if (event.key === "Enter") {
+            loginProfessional();
+        }
+    });
+
+    form.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        submitButton.disabled = true;
+        submitButton.textContent = "Enviando chamado...";
+
+        resultMessage.className = "message";
+        resultTitle.textContent = "";
+        protocolValue.textContent = "";
+        statusValue.textContent = "";
+
+        const formData = new FormData(form);
+
+        const payload = {
+            customerName: formData.get("customerName"),
+            customerContact: formData.get("customerContact"),
+            city: formData.get("city"),
+            address: formData.get("address"),
+            neighborhood: formData.get("neighborhood"),
+            referencePoint: formData.get("referencePoint"),
+            description: formData.get("description")
+        };
+
+        try {
+            const response = await fetch("/requests/open", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error("Não foi possível abrir o chamado. Verifique os campos e tente novamente.");
+            }
+
+            const data = await response.json();
+
+            resultMessage.className = "message success";
+            resultTitle.textContent = "Chamado aberto com sucesso.";
+            protocolValue.textContent = data.protocol || "Não informado";
+            statusValue.textContent = translateStatus(data.status);
+
+            form.reset();
+            await loadRequests();
+        } catch (error) {
+            resultMessage.className = "message error";
+            resultTitle.textContent = error.message;
+            protocolValue.textContent = "-";
+            statusValue.textContent = "-";
+        } finally {
+            submitButton.disabled = false;
+            submitButton.textContent = "Abrir chamado";
+        }
+    });
+
+    professionalForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
+
+        professionalSubmitButton.disabled = true;
+        professionalSubmitButton.textContent = "Cadastrando...";
+
+        professionalMessage.className = "message";
+        professionalMessageTitle.textContent = "";
+
+        const formData = new FormData(professionalForm);
+
+        const payload = {
+            companyName: formData.get("companyName"),
+            name: formData.get("professionalName"),
+            role: formData.get("professionalRole"),
+            specialty: formData.get("professionalSpecialty")
+        };
+
+        try {
+            await createProfessional(payload);
+
+            professionalMessage.className = "message success";
+            professionalMessageTitle.textContent = "Profissional cadastrado com sucesso.";
+
+            professionalForm.reset();
+            document.getElementById("companyName").value = "OLN Internet";
+
+            await loadProfessionals();
+        } catch (error) {
+            professionalMessage.className = "message error";
+            professionalMessageTitle.textContent = error.message;
+        } finally {
+            professionalSubmitButton.disabled = false;
+            professionalSubmitButton.textContent = "Cadastrar profissional";
+        }
+    });
+
+    assistantRefreshButton.addEventListener("click", loadRequests);
+    technicianRefreshButton.addEventListener("click", loadRequests);
+    professionalRefreshButton.addEventListener("click", loadProfessionals);
+
+    managementRefreshButton.addEventListener("click", async function () {
+        await loadRequests();
+        await loadProfessionals();
+    });
+
+    managementProfessionalsButton.addEventListener("click", function () {
+        showSection("professionalSection");
+    });
+
+    initializePage();
+
+    async function initializePage() {
+        await loadProfessionals();
+        await loadRequests();
+    }
+</script>
+</body>
+</html>
